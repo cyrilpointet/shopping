@@ -6,7 +6,6 @@ self.addEventListener('install', e => {
             '/sw.js',
             '/index.html',
             '/favicon.ico',
-            '/app.js',
         ])
             .then(() => self.skipWaiting());
     })

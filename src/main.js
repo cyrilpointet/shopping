@@ -36,12 +36,13 @@ new Vue({
     data: {
         isLoading: false,
         modalInstallOpen: false,
-        deferredInstallPrompt: null
+        deferredInstallPrompt: null,
+        audioVolume: 1
     },
     created: function() {
         window.addEventListener('beforeinstallprompt', (evt) => {
+            evt.preventDefault();
             this.deferredInstallPrompt = evt;
-            console.log(this.deferredInstallPrompt);
             this.modalInstallOpen = true;
         });
 
@@ -125,7 +126,9 @@ new Vue({
                 let myList = new ShoppingList(snapshot.val().shoppingList);
                 if (null === this.$store.state.list || JSON.stringify(myList.asObject()) !== JSON.stringify(this.$store.state.list.asObject())) {
                     this.$store.commit('setList', myList);
-                    console.log('dong');
+                    let audio = new Audio('sounds/boing.mp3');
+                    audio.volume = this.audioVolume;
+                    audio.play();
                 }
             });
         },

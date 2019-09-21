@@ -21,6 +21,9 @@
             <v-btn fab @click="modalDeleteOpen = true" class="red lighten-1 white--text">
                 <v-icon>mdi-delete-outline</v-icon>
             </v-btn>
+            <v-btn fab @click="toggleVolume()" class="pink lighten-4">
+                <v-icon>{{1 === $root.audioVolume ? 'mdi-volume-source' : "mdi-volume-off"}}</v-icon>
+            </v-btn>
             <v-btn fab @click="$root.signOut()" class="pink lighten-4">
                 <v-icon>mdi-account-off-outline</v-icon>
             </v-btn>
@@ -161,6 +164,9 @@
                     console.log('err');
                     this.overlay = false;
                 })
+            },
+            toggleVolume() {
+                this.$root.audioVolume = 1 === this.$root.audioVolume ? 0 : 1;
             }
         }
     };
