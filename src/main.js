@@ -34,9 +34,17 @@ new Vue({
     store,
     vuetify,
     data: {
-        isLoading: false
+        isLoading: false,
+        modalInstallOpen: false,
+        deferredInstallPrompt: null
     },
     created: function() {
+        window.addEventListener('beforeinstallprompt', (evt) => {
+            this.deferredInstallPrompt = evt;
+            console.log(this.deferredInstallPrompt);
+            this.modalInstallOpen = true;
+        });
+
         firebase.initializeApp(firebaseConfig);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -52,6 +60,10 @@ new Vue({
     },
 
     methods: {
+        intallPWa() {
+            this.modalInstallOpen = false;
+            this.deferredInstallPrompt.prompt();
+        },
         /**
          *
          * @param {string} email
@@ -113,7 +125,7 @@ new Vue({
                 let myList = new ShoppingList(snapshot.val().shoppingList);
                 if (null === this.$store.state.list || JSON.stringify(myList.asObject()) !== JSON.stringify(this.$store.state.list.asObject())) {
                     this.$store.commit('setList', myList);
-                    console.log('ding');
+                    console.log('dong');
                 }
             });
         },

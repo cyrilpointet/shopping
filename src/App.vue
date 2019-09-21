@@ -47,7 +47,7 @@
         </v-content>
 
         <v-dialog v-model="modalItemOpen" width="500">
-            <v-card max-width="344" class="mx-auto mt-5" v-if="!loading">
+            <v-card class="mx-auto" v-if="!loading">
                 <v-card-title>
                     Ajouter un produit
                 </v-card-title>
@@ -68,11 +68,31 @@
         </v-dialog>
 
         <v-dialog v-model="modalDeleteOpen" width="500">
-            <v-card max-width="344" class="mx-auto mt-5">
+            <v-card class="mx-auto">
                 <v-card-text class="pt-5">
                     <v-btn block @click="purgeItems()" class="deep-purple accent-1 white--text">Supprimer les produits grisés</v-btn>
                     <p class="text-center font-italic">ou</p>
                     <v-btn block @click="deleteList()" class="red lighten-1 white--text">Supprimer toute la liste</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="$root.modalInstallOpen" width="500">
+            <v-card class="mx-auto">
+                <v-card-title>Installer l'application ?</v-card-title>
+                <v-card-text class="pt-5 text-center">
+                    <v-btn  text @click="$root.intallPWa()" class="">Ok</v-btn>
+                    <span class="text-center font-italic">ou</span>
+                    <v-btn text @click="$root.modalInstallOpen = false" class="">Pus tard</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="$root.appInstalled" width="500">
+            <v-card class="mx-auto">
+                <v-card-title>Shopping List a bien été installé</v-card-title>
+                <v-card-text class="pt-5 text-center">
+                    <p>Nous vous invitons à passer sur l'application</p>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -98,6 +118,7 @@
             fabOpen: false,
             modalItemOpen: false,
             modalDeleteOpen: false,
+            modalInstallOpen: false,
             loading: false,
             overlay: false,
             name: '',

@@ -1,7 +1,6 @@
 self.addEventListener('install', e => {
     e.waitUntil(
         caches.open('pwa').then(cache => {
-        console.log('test');
         return cache.addAll([
             '/',
             '/sw.js',
@@ -11,6 +10,9 @@ self.addEventListener('install', e => {
         ])
             .then(() => self.skipWaiting());
     })
+            .catch(err => {
+                console.log(err);
+            })
 )
 });
 
