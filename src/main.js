@@ -22,6 +22,12 @@ const firebaseConfig = {
     appId: "1:781725545463:web:9135e7dc1c2d86ff"
 };
 
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('/sw.js')
+        .then(function() { console.log("Service Worker Registered"); });
+}
+
 Vue.config.productionTip = false;
 
 new Vue({
