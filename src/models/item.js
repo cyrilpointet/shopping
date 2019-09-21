@@ -8,4 +8,12 @@ export class Item {
     isValid() {
         return '' !== this.name;
     }
+
+    asObject() {
+        return {
+            name: this.name,
+            qte: this.qte,
+            isInCart: this.isInCart
+        }
+    }
 }

@@ -26,7 +26,10 @@ Vue.config.productionTip = false;
 
 new Vue({
     store,
-
+    vuetify,
+    data: {
+        isLoading: false
+    },
     created: function() {
         firebase.initializeApp(firebaseConfig);
         firebase.auth().onAuthStateChanged((user) => {
@@ -36,40 +39,58 @@ new Vue({
                 this.$store.commit('setList', new ShoppingList());
                 this.startDbListenner(newUser.uid);
             } else {
-                console.log('/auth')
+                this.$store.commit('setUser', null);
+                this.$store.commit('setList', null);
             }
         });
     },
 
     methods: {
+        /**
+         *
+         * @param {string} email
+         * @param {string} password
+         */
         logIn(email, password) {
+            this.isLoading = true;
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((data) => {
+                    this.isLoading = false;
                     let newUser = new User(data.user);
                     this.$store.commit('setUser', newUser);
                     this.startDbListenner(newUser.uid);
                 })
                 .catch((err) => {
+                    this.isLoading = false;
                     console.log('error ', err)
                 })
         },
+
+        /**
+         *
+         * @param {string} email
+         * @param {string} password
+         */
         signIn(email, password) {
+            this.isLoading = true;
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((data) => {
+                    this.isLoading = false;
                     let newUser = new User(data.user);
                     this.$store.commit('setUser', newUser);
-
-                    let newList = new ShoppingList();
-                    this.$store.commit('setList', newList);
-
+                    this.$store.commit('setList', new ShoppingList());
                     this.saveDb().then(() => {
                         this.startDbListenner(newUser.uid);
                     })
                 })
                 .catch((err) => {
+                    this.isLoading = false;
                     console.log('error ', err)
                 })
         },
+        /**
+         *
+         */
         signOut() {
             firebase.auth().signOut().then(() => {
                 this.$store.commit('deleteUser');
@@ -77,17 +98,23 @@ new Vue({
                 console.log('error: ', error);
             });
         },
+        /**
+         * Start listenning changes on firebase real-time db
+         */
         startDbListenner() {
             let myDbRef = firebase.database().ref('lists/' + this.$store.state.user.uid);
             myDbRef.on('value', (snapshot) => {
                 let myList = new ShoppingList(snapshot.val().shoppingList);
                 if (null === this.$store.state.list || JSON.stringify(myList.asObject()) !== JSON.stringify(this.$store.state.list.asObject())) {
-                    console.log(JSON.stringify(myList.asObject()) === JSON.stringify(this.$store.state.list.asObject()));
                     this.$store.commit('setList', myList);
                     console.log('ding');
                 }
             });
         },
+        /**
+         *
+         * @returns {Promise<unknown>}
+         */
         saveDb() {
             return new Promise((resolve, reject) => {
                 let myDbRef = firebase.database().ref('lists/' + this.$store.state.user.uid);
@@ -102,7 +129,5 @@ new Vue({
 
         }
     },
-
-    vuetify,
     render: h => h(App)
 }).$mount('#app')

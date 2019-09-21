@@ -1,12 +1,6 @@
 <template>
-    <div>
+    <div class="elevation-2 mt-4 mx-1">
         <v-simple-table>
-            <thead>
-                <tr>
-                    <th class="text-left">Name</th>
-                    <th class="text-left">Qte</th>
-                </tr>
-            </thead>
             <transition-group name="list" tag="tbody">
                 <tr v-for="(item, index) in $store.state.list.items" :key="item.name" class="cell" :class="{isInCart: item.isInCart}" @click="toggleFromCart(index)">
                     <td>{{ item.name }}</td>
@@ -28,9 +22,7 @@
         methods: {
             toggleFromCart(i) {
                 this.$store.commit('toggleItem',i);
-                this.$root.saveDb().then(() => {
-                    //console.log('pouet');
-                })
+                this.$root.saveDb();
             }
         }
     }
@@ -42,14 +34,12 @@
         background-color: white;
         transition: all .3s;
     }
-
     .isInCart {
         background-color: lightgray !important;
         td {
             opacity: .5;
         }
     }
-
     .list-move {
         transition: all .3s;
     }
